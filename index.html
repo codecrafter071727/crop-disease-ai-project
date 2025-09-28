@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🌿 Crop Disease Analyzer</title>
+</head>
+<body>
+  <h2>🌿 Crop Disease Analyzer</h2>
+  <form id="upload-form">
+    <input type="file" id="file-input" accept="image/*">
+    <button type="submit">Predict</button>
+  </form>
+  <p id="result"></p>
+
+  <script>
+    document.getElementById("upload-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const fileInput = document.getElementById("file-input");
+      if (fileInput.files.length === 0) {
+        alert("Please select a file!");
+        return;
+      }
+      const formData = new FormData();
+      formData.append("file", fileInput.files[0]);
+
+      const response = await fetch("http://127.0.0.1:8000/predict", {
+        method: "POST",
+        body: formData
+      });
+
+      const result = await response.json();
+      document.getElementById("result").innerText =
+        `Prediction: ${result.predicted_class} (Confidence: ${result.confidence.toFixed(2)}%)`;
+    });
+  </script>
+</body>
+</html>
